@@ -1,4 +1,4 @@
-import { buildResearchBrief } from "./brief.mjs?v=20260907-brief-2";
+import { buildResearchBrief } from "./brief.mjs?v=20260907-evidence-3";
 
 const $ = (id) => document.getElementById(id);
 const svgNs = "http://www.w3.org/2000/svg";
@@ -225,10 +225,15 @@ async function copyResearchBrief() {
 
 function renderEvidence(sources) {
   const list = $("evidence");
+  const openSources = new Set(
+    [...list.querySelectorAll("details[open]")].map((details) => details.dataset.source),
+  );
   clear(list);
-  for (const source of sources) {
+  for (const [index, source] of sources.entries()) {
     const details = document.createElement("details");
     details.className = "evidence-item";
+    details.dataset.source = source.name;
+    details.open = openSources.size ? openSources.has(source.name) : index === 0;
     const summary = document.createElement("summary");
     const identity = document.createElement("span");
     const name = document.createElement("strong");
@@ -239,12 +244,21 @@ function renderEvidence(sources) {
     const status = document.createElement("span");
     status.className = `state-chip ${source.state === "fresh" ? "positive" : source.state === "stale" ? "warning" : source.state === "unavailable" ? "negative" : "neutral"}`;
     status.textContent = source.state;
-    summary.append(identity, status);
+    const health = document.createElement("span");
+    health.className = "evidence-health";
+    const statusText = source.http_status ? `HTTP ${source.http_status}` : "No HTTP response";
+    const cacheText = source.cache_age_seconds == null
+      ? "cache unavailable"
+      : `cache ${source.cache_age_seconds}s / ${source.cache_ttl_seconds}s`;
+    const summaryMeta = document.createElement("span");
+    summaryMeta.className = "evidence-summary-meta";
+    summaryMeta.textContent = `${statusText} · ${cacheText}`;
+    health.append(summaryMeta, status);
+    summary.append(identity, health);
 
     const content = document.createElement("div");
     content.className = "evidence-content";
     const metadata = document.createElement("p");
-    const statusText = source.http_status ? `HTTP ${source.http_status}` : "No HTTP response";
     metadata.textContent = `${statusText} · cache age ${source.cache_age_seconds ?? "--"}s · TTL ${source.cache_ttl_seconds}s`;
     const pre = document.createElement("pre");
     pre.textContent = JSON.stringify(
