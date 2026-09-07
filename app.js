@@ -1,4 +1,4 @@
-import { buildResearchBrief } from "./brief.mjs";
+import { buildResearchBrief } from "./brief.mjs?v=20260907-brief-2";
 
 const $ = (id) => document.getElementById(id);
 const svgNs = "http://www.w3.org/2000/svg";
@@ -186,14 +186,39 @@ async function copyResearchBrief() {
     return;
   }
 
+  let copied = false;
   try {
-    await navigator.clipboard.writeText(currentBrief);
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(currentBrief);
+      copied = true;
+    }
+  } catch {
+    copied = false;
+  }
+
+  if (!copied) {
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = currentBrief;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.append(textarea);
+      textarea.select();
+      copied = document.execCommand("copy");
+      textarea.remove();
+    } catch {
+      copied = false;
+    }
+  }
+
+  if (copied) {
     status.textContent = "Copied. Review the source data before publishing any claim.";
     button.textContent = "Copied";
     window.setTimeout(() => {
       button.textContent = "Copy research brief";
     }, 1600);
-  } catch {
+  } else {
     status.textContent = "Clipboard access was blocked. Select the brief text manually.";
   }
 }

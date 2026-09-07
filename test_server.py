@@ -124,6 +124,12 @@ class AppHandlerTests(unittest.TestCase):
         self.assertEqual(payload["breadth"]["posture"]["code"], "broad_advance")
         self.assertNotIn("data", payload["sources"][0])
 
+    def test_static_assets_do_not_cache_stale_frontend_modules(self) -> None:
+        with urlopen(f"{self.base_url}/app.js", timeout=5) as response:
+            cache_control = response.headers.get("Cache-Control")
+
+        self.assertEqual(cache_control, "no-store")
+
     def test_encoded_dotfiles_are_not_served(self) -> None:
         with self.assertRaises(HTTPError) as error:
             urlopen(f"{self.base_url}/%2eenv", timeout=5)

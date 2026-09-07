@@ -318,6 +318,12 @@ def evidence_for(
 class AppHandler(SimpleHTTPRequestHandler):
     service: SnapshotService
 
+    def end_headers(self) -> None:
+        # The demo changes frequently during the hackathon; stale modules break UI updates.
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        super().end_headers()
+
     def do_GET(self) -> None:  # noqa: N802 - required HTTP handler name
         path = unquote(urlsplit(self.path).path)
         if path == "/api/market-structure":
@@ -348,8 +354,6 @@ class AppHandler(SimpleHTTPRequestHandler):
         body = json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Cache-Control", "no-store")
-        self.send_header("X-Content-Type-Options", "nosniff")
         self.end_headers()
         self.wfile.write(body)
 
