@@ -1,0 +1,8 @@
+{
+  "name": "trendlab-market-structure-map",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:brief": "node --test brief.test.mjs"
+  }
+}

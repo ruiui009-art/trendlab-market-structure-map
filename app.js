@@ -1,7 +1,10 @@
+import { buildResearchBrief } from "./brief.mjs";
+
 const $ = (id) => document.getElementById(id);
 const svgNs = "http://www.w3.org/2000/svg";
 let timer;
 let methodology = null;
+let currentBrief = "";
 
 function formatPercent(value, digits = 1) {
   const number = Number(value);
@@ -169,6 +172,32 @@ function renderCategoryObservation(observation) {
   element.dataset.tone = observation.confirmed ? "positive" : "warning";
 }
 
+function renderResearchBrief(snapshot) {
+  currentBrief = buildResearchBrief(snapshot);
+  $("brief-output").textContent = currentBrief;
+  $("brief-status").textContent = "";
+}
+
+async function copyResearchBrief() {
+  const button = $("copy-brief");
+  const status = $("brief-status");
+  if (!currentBrief) {
+    status.textContent = "A live snapshot is required before a brief can be copied.";
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(currentBrief);
+    status.textContent = "Copied. Review the source data before publishing any claim.";
+    button.textContent = "Copied";
+    window.setTimeout(() => {
+      button.textContent = "Copy research brief";
+    }, 1600);
+  } catch {
+    status.textContent = "Clipboard access was blocked. Select the brief text manually.";
+  }
+}
+
 function renderEvidence(sources) {
   const list = $("evidence");
   clear(list);
@@ -253,6 +282,7 @@ function renderSnapshot(snapshot) {
   renderAssetList("laggards", breadth.laggards);
   renderCategories(snapshot.categories);
   renderCategoryObservation(snapshot.category_observation);
+  renderResearchBrief(snapshot);
   renderEvidence(snapshot.sources);
   renderMethodology(snapshot.methodology);
 
@@ -300,6 +330,7 @@ async function load() {
 }
 
 $("refresh").addEventListener("click", load);
+$("copy-brief").addEventListener("click", copyResearchBrief);
 $("methodology-toggle").addEventListener("click", () => {
   const detail = $("methodology-detail");
   detail.hidden = !detail.hidden;

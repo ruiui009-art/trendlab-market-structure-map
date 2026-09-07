@@ -56,6 +56,10 @@ CMC categories can overlap. The app never adds category market caps together and
 
 A category is marked `Confirmed` only when its CMC average price change, market-cap change, and volume change are all positive. `Price only` means the average price moved up but at least one of the other two fields does not confirm it. This is a reproducible research lead, not proof of capital flow, causality, or future returns.
 
+### Research brief
+
+The UI can copy a timestamped research brief built from the displayed snapshot. It includes market posture, breadth, leadership divergence, confirmed/unconfirmed category observations, and an editorial limitation. It is a starting point for human research, not content ready for publication or an automated recommendation.
+
 ## What CMC made possible / limitations
 
 CMC makes it possible to compare a single timestamped market snapshot across ranked assets, global metrics, categories, and the Altcoin Season Index. Without a common source, the breadth calculation would mix incompatible universes and update times.
@@ -68,6 +72,7 @@ Requires Python 3. No packages need to be installed.
 
 ```bash
 python3 -m unittest
+npm run test:brief
 python3 server.py
 ```
 

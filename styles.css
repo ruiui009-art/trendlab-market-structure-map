@@ -157,6 +157,14 @@ td { padding: 14px 10px 14px 0; border-top: 1px solid rgb(255 255 255 / 6%); fon
 td:first-child { min-width: 165px; font-weight: 700; }
 td:not(:first-child) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; }
 
+.brief-section { margin-top: 14px; background: linear-gradient(115deg, rgb(116 187 255 / 10%), var(--surface)); }
+.brief-head { align-items: center; }
+.copy-brief { padding: 10px 13px; border: 1px solid var(--blue); color: var(--blue); background: transparent; cursor: pointer; font-size: 12px; font-weight: 750; }
+.copy-brief:hover { border-color: var(--acid); color: var(--acid); }
+.brief-section > .method-note { margin-right: 27px; margin-left: 27px; }
+.brief-output { min-height: 178px; margin: 18px 27px 0; padding: 18px; overflow-x: auto; border: 1px solid rgb(116 187 255 / 23%); background: rgb(3 6 10 / 55%); color: var(--soft); font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; }
+.brief-status { min-height: 18px; margin: 10px 27px 25px; color: var(--acid); font-size: 12px; }
+
 .lower-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
 .season-card, .method-card { min-height: 244px; padding: 29px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
 .season-body { display: flex; gap: 18px; margin-top: 25px; align-items: center; }
@@ -222,6 +230,7 @@ footer span:first-child { color: var(--soft); font-weight: 700; }
   .category-head { display: block; }
   .category-head .method-note, .evidence-title > p { margin-top: 14px; text-align: left; }
   .category-observation { margin-right: 20px; margin-left: 20px; }
+  .brief-section > .method-note, .brief-output, .brief-status { margin-right: 20px; margin-left: 20px; }
   .evidence-section { margin-top: 40px; }
   footer { display: grid; padding: 20px; }
 }
