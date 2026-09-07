@@ -111,7 +111,7 @@ function renderCategories(categories) {
   if (!categories.length) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    cell.colSpan = 5;
+    cell.colSpan = 6;
     cell.textContent = "Category data is currently unavailable; no category conclusion is shown.";
     row.append(cell);
     body.append(row);
@@ -120,8 +120,18 @@ function renderCategories(categories) {
 
   for (const category of categories) {
     const row = document.createElement("tr");
+    const name = document.createElement("td");
+    name.textContent = category.name;
+    row.append(name);
+
+    const signal = document.createElement("td");
+    const signalChip = document.createElement("span");
+    signalChip.className = `state-chip ${category.confirmation === "confirmed" ? "positive" : category.confirmation === "price_only" ? "warning" : "negative"}`;
+    signalChip.textContent = category.confirmation === "confirmed" ? "Confirmed" : category.confirmation === "price_only" ? "Price only" : "Negative";
+    signal.append(signalChip);
+    row.append(signal);
+
     const values = [
-      category.name,
       String(category.num_tokens),
       formatPercent(category.avg_price_change),
       formatPercent(category.market_cap_change),
@@ -130,11 +140,33 @@ function renderCategories(categories) {
     values.forEach((value, index) => {
       const cell = document.createElement("td");
       cell.textContent = value;
-      if (index > 1) cell.dataset.tone = toneFor([category.avg_price_change, category.market_cap_change, category.volume_change][index - 2]);
+      if (index > 0) cell.dataset.tone = toneFor([category.avg_price_change, category.market_cap_change, category.volume_change][index - 1]);
       row.append(cell);
     });
     body.append(row);
   }
+}
+
+function renderCategoryObservation(observation) {
+  const element = $("category-observation");
+  if (!observation) {
+    element.textContent = "Category data is unavailable, so no cross-metric observation is shown.";
+    element.dataset.tone = "neutral";
+    return;
+  }
+
+  const parts = [];
+  if (observation.confirmed) {
+    const category = observation.confirmed;
+    parts.push(`Confirmed cross-metric lead: ${category.name} (${formatPercent(category.avg_price_change)} average price, ${formatPercent(category.market_cap_change)} market cap, ${formatPercent(category.volume_change)} volume).`);
+  }
+  if (observation.price_only) {
+    const category = observation.price_only;
+    parts.push(`Unconfirmed outlier: ${category.name} has ${formatPercent(category.avg_price_change)} average price change without all three metrics confirming.`);
+  }
+  parts.push(observation.limitation);
+  element.textContent = parts.join(" ");
+  element.dataset.tone = observation.confirmed ? "positive" : "warning";
 }
 
 function renderEvidence(sources) {
@@ -220,6 +252,7 @@ function renderSnapshot(snapshot) {
   renderAssetList("leaders", breadth.leaders);
   renderAssetList("laggards", breadth.laggards);
   renderCategories(snapshot.categories);
+  renderCategoryObservation(snapshot.category_observation);
   renderEvidence(snapshot.sources);
   renderMethodology(snapshot.methodology);
 

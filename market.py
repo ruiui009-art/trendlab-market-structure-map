@@ -254,6 +254,9 @@ def normalize_categories(categories: Iterable[Mapping[str, Any]] | None) -> list
                 "avg_price_change": average_change,
                 "market_cap_change": market_cap_change,
                 "volume_change": volume_change,
+                "confirmation": category_confirmation(
+                    average_change, market_cap_change, volume_change
+                ),
                 "last_updated": category.get("last_updated"),
             }
         )
@@ -263,6 +266,51 @@ def normalize_categories(categories: Iterable[Mapping[str, Any]] | None) -> list
         reverse=True,
     )
     return normalized[:8]
+
+
+def category_confirmation(
+    average_change: float, market_cap_change: float, volume_change: float
+) -> str:
+    """Label cross-metric agreement without treating it as a trading signal."""
+
+    if average_change > 0 and market_cap_change > 0 and volume_change > 0:
+        return "confirmed"
+    if average_change > 0:
+        return "price_only"
+    return "negative"
+
+
+def category_observation(categories: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """Surface one reproducible research lead and one explicitly unconfirmed outlier."""
+
+    if not categories:
+        return None
+
+    confirmed = [category for category in categories if category["confirmation"] == "confirmed"]
+    price_only = [category for category in categories if category["confirmation"] == "price_only"]
+    strongest_confirmed = max(
+        confirmed,
+        key=lambda category: min(
+            category["avg_price_change"],
+            category["market_cap_change"],
+            category["volume_change"],
+        ),
+        default=None,
+    )
+    highest_price_only = max(
+        price_only,
+        key=lambda category: category["avg_price_change"],
+        default=None,
+    )
+
+    return {
+        "confirmed": strongest_confirmed,
+        "price_only": highest_price_only,
+        "limitation": (
+            "Cross-metric confirmation is a research lead only. It does not prove "
+            "capital flow, causality, or future returns."
+        ),
+    }
 
 
 def normalize_altcoin_season(data: Mapping[str, Any] | None) -> dict[str, Any] | None:
@@ -299,13 +347,15 @@ def build_snapshot(
 
     universe = build_universe(listings)
     breadth = build_breadth(universe)
+    normalized_categories = normalize_categories(categories)
     return {
         "market": normalize_market(global_metrics),
         "breadth": breadth,
-        "categories": normalize_categories(categories),
+        "categories": normalized_categories,
+        "category_observation": category_observation(normalized_categories),
         "altcoin_season": normalize_altcoin_season(altcoin_season),
         "methodology": {
-            "version": "1.0",
+            "version": "1.1",
             "universe": universe["universe_label"],
             "broad_advance": "breadth >= 65% and median return > 0",
             "narrow_leadership": (

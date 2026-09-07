@@ -146,6 +146,10 @@ h1 em { color: var(--acid); font-family: Georgia, serif; font-size: 1.11em; font
 .category-section { margin-top: 14px; }
 .category-head { align-items: end; }
 .category-head .method-note { max-width: 415px; margin: 0; text-align: right; }
+.category-observation { margin: 20px 27px 0; padding: 12px 14px; border-left: 2px solid currentcolor; background: rgb(255 255 255 / 3%); color: var(--soft); font-size: 13px; }
+.category-observation[data-tone="positive"] { color: var(--acid); }
+.category-observation[data-tone="warning"] { color: var(--orange); }
+.category-observation[data-tone="neutral"] { color: var(--muted); }
 .table-wrap { overflow-x: auto; padding: 22px 27px 27px; }
 table { width: 100%; border-collapse: collapse; text-align: left; }
 th { padding: 0 10px 11px 0; color: var(--muted); font: 700 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
@@ -217,6 +221,7 @@ footer span:first-child { color: var(--soft); font-weight: 700; }
   .movers-grid > div + div { padding-top: 22px; padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
   .category-head { display: block; }
   .category-head .method-note, .evidence-title > p { margin-top: 14px; text-align: left; }
+  .category-observation { margin-right: 20px; margin-left: 20px; }
   .evidence-section { margin-top: 40px; }
   footer { display: grid; padding: 20px; }
 }

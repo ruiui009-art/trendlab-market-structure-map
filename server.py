@@ -251,9 +251,40 @@ def response_excerpt(source: dict[str, Any], payload: dict[str, Any]) -> dict[st
             "percent_change_24h": usd.get("percent_change_24h"),
             "market_cap": usd.get("market_cap"),
         }
+    elif source["name"] == "Global metrics" and isinstance(data, dict):
+        quote = data.get("quote", {})
+        usd = quote.get("USD", {}) if isinstance(quote, dict) else {}
+        excerpt["data"] = {
+            "btc_dominance": data.get("btc_dominance"),
+            "eth_dominance": data.get("eth_dominance"),
+            "last_updated": data.get("last_updated"),
+            "quote": {
+                "USD": {
+                    "total_market_cap": usd.get("total_market_cap"),
+                    "altcoin_market_cap": usd.get("altcoin_market_cap"),
+                    "total_volume_24h": usd.get("total_volume_24h"),
+                    "last_updated": usd.get("last_updated"),
+                }
+            },
+        }
     elif source["name"] == "Categories" and isinstance(data, list):
         excerpt["items_returned"] = len(data)
-        excerpt["first_category"] = data[0] if data else {}
+        first = data[0] if data else {}
+        excerpt["first_category"] = {
+            "id": first.get("id"),
+            "name": first.get("name"),
+            "num_tokens": first.get("num_tokens"),
+            "avg_price_change": first.get("avg_price_change"),
+            "market_cap_change": first.get("market_cap_change"),
+            "volume_change": first.get("volume_change"),
+        }
+    elif source["name"] == "Altcoin Season" and isinstance(data, dict):
+        excerpt["data"] = {
+            "altcoin_index": data.get("altcoin_index"),
+            "yearly_high": data.get("yearly_high"),
+            "yearly_low": data.get("yearly_low"),
+            "snapshot_time": data.get("snapshot_time"),
+        }
     else:
         excerpt["data"] = data
     return excerpt

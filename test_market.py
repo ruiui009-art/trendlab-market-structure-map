@@ -100,11 +100,22 @@ class MarketMethodologyTests(unittest.TestCase):
                 "market_cap_change": 1,
                 "volume_change": 10,
             },
+            {
+                "id": "price-only",
+                "name": "Price only",
+                "num_tokens": 12,
+                "market_cap": 1_000_000_000,
+                "avg_price_change": 8,
+                "market_cap_change": -1,
+                "volume_change": 10,
+            },
         ]
 
         result = normalize_categories(categories)
 
-        self.assertEqual([category["name"] for category in result], ["Layer 1"])
+        self.assertEqual([category["name"] for category in result], ["Price only", "Layer 1"])
+        self.assertEqual(result[0]["confirmation"], "price_only")
+        self.assertEqual(result[1]["confirmation"], "confirmed")
 
 
 if __name__ == "__main__":

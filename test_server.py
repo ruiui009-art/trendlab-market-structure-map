@@ -50,9 +50,10 @@ class FakeCmcClient:
                     "last_updated": "2026-09-07T00:00:00.000Z",
                     "quote": {
                         "USD": {
-                            "total_market_cap": 2_700_000_000_000,
-                            "altcoin_market_cap": 1_100_000_000_000,
-                            "total_volume_24h": 70_000_000_000,
+                        "total_market_cap": 2_700_000_000_000,
+                        "altcoin_market_cap": 1_100_000_000_000,
+                        "total_volume_24h": 70_000_000_000,
+                        "derivatives_volume_24h": 500_000_000_000,
                         }
                     },
                 },
@@ -69,6 +70,7 @@ class FakeCmcClient:
                         "avg_price_change": 2,
                         "market_cap_change": 1,
                         "volume_change": 5,
+                        "description": "This field is not needed by the evidence drawer.",
                     }
                 ],
                 "status": common_status,
@@ -94,6 +96,10 @@ class SnapshotServiceTests(unittest.TestCase):
         self.assertEqual(snapshot["sources"][0]["endpoint"], "/v3/cryptocurrency/listings/latest")
         self.assertIn("response_excerpt", snapshot["sources"][0])
         self.assertNotIn("CMC_API_KEY", str(snapshot))
+        global_excerpt = snapshot["sources"][1]["response_excerpt"]["data"]
+        self.assertNotIn("derivatives_volume_24h", str(global_excerpt))
+        category_excerpt = snapshot["sources"][2]["response_excerpt"]["first_category"]
+        self.assertNotIn("description", category_excerpt)
 
 
 class AppHandlerTests(unittest.TestCase):

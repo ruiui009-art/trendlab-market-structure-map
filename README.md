@@ -52,6 +52,10 @@ Mixed structure    otherwise
 
 CMC categories can overlap. The app never adds category market caps together and never calls category changes a measured capital flow.
 
+### Category cross-check
+
+A category is marked `Confirmed` only when its CMC average price change, market-cap change, and volume change are all positive. `Price only` means the average price moved up but at least one of the other two fields does not confirm it. This is a reproducible research lead, not proof of capital flow, causality, or future returns.
+
 ## What CMC made possible / limitations
 
 CMC makes it possible to compare a single timestamped market snapshot across ranked assets, global metrics, categories, and the Altcoin Season Index. Without a common source, the breadth calculation would mix incompatible universes and update times.
