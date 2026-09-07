@@ -1,0 +1,10 @@
+services:
+  - type: web
+    runtime: docker
+    name: trendlab-market-structure-map
+    plan: free
+    healthCheckPath: /
+    autoDeployTrigger: commit
+    envVars:
+      - key: CMC_API_KEY
+        sync: false

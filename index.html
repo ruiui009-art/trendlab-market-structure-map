@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="An evidence-first CMC market-breadth map for crypto researchers.">
+    <title>TrendLab Market Structure Map</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body data-tone="neutral">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="TrendLab Market Structure Map home">
+        <span class="brand-mark">TL</span>
+        <span>
+          <strong>TrendLab</strong>
+          <small>Market Structure Map</small>
+        </span>
+      </a>
+      <div class="topbar-actions">
+        <span class="data-status"><i></i><span id="access-mode">CMC data</span></span>
+        <button id="refresh" class="refresh" type="button">Refresh snapshot</button>
+      </div>
+    </header>
+
+    <main id="top" class="shell">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">Research context / not a trading signal</p>
+        <div class="intro-row">
+          <h1 id="page-title">Is the market moving<br><em>together?</em></h1>
+          <p class="intro-copy">A green headline can be broad participation, large-cap leadership, or a narrow category move. This map makes the distinction visible.</p>
+        </div>
+      </section>
+
+      <section class="posture-card" aria-live="polite">
+        <div class="posture-copy">
+          <p class="panel-label">Current structure</p>
+          <h2 id="posture">Collecting CMC snapshot</h2>
+          <p id="posture-summary">Loading the ranked market, global metrics, category data, and Altcoin Season Index.</p>
+          <div class="snapshot-meta">
+            <span id="snapshot-time">Awaiting response</span>
+            <span id="snapshot-state" class="state-chip neutral">Checking sources</span>
+          </div>
+        </div>
+        <div class="breadth-orb" aria-label="Market breadth">
+          <strong id="breadth-value">--</strong>
+          <span>positive<br>assets</span>
+          <small id="breadth-count">of --</small>
+        </div>
+      </section>
+
+      <section class="metric-strip" aria-label="Market overview">
+        <article>
+          <span>BTC dominance</span>
+          <strong id="btc-dominance">--</strong>
+        </article>
+        <article>
+          <span>ETH dominance</span>
+          <strong id="eth-dominance">--</strong>
+        </article>
+        <article>
+          <span>Total market cap</span>
+          <strong id="total-market-cap">--</strong>
+        </article>
+        <article>
+          <span>24h adjusted volume</span>
+          <strong id="total-volume">--</strong>
+        </article>
+      </section>
+
+      <section class="analysis-grid">
+        <article class="panel breadth-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">The breadth field</p>
+              <h2>100 assets, one distribution</h2>
+            </div>
+            <span id="universe-note" class="subtle">CMC universe</span>
+          </div>
+          <div class="plot-key"><span><i class="dot positive"></i>positive</span><span><i class="dot negative"></i>negative</span><span><i class="dot neutral"></i>flat</span></div>
+          <svg id="breadth-plot" viewBox="0 0 1000 150" role="img" aria-label="24 hour change distribution of the CMC universe"></svg>
+          <div class="axis"><span>-10% or less</span><span>0%</span><span>+10% or more</span></div>
+          <p class="method-note">Each mark is one CMC-ranked non-stable asset. Positions are clamped only for display; calculations use the full 24-hour change.</p>
+        </article>
+
+        <article class="panel leadership-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Leadership check</p>
+              <h2>Index strength vs. typical asset</h2>
+            </div>
+            <span id="divergence-badge" class="state-chip neutral">-- divergence</span>
+          </div>
+          <div class="comparison">
+            <div class="comparison-row">
+              <div class="comparison-copy"><span>Market-cap weighted</span><strong id="weighted-return">--</strong></div>
+              <div class="track"><i id="weighted-bar"></i></div>
+            </div>
+            <div class="comparison-row">
+              <div class="comparison-copy"><span>Median asset</span><strong id="median-return">--</strong></div>
+              <div class="track"><i id="median-bar"></i></div>
+            </div>
+          </div>
+          <p id="leadership-note" class="method-note">Weighted return and median return use the same top-100 non-stable universe.</p>
+        </article>
+
+        <article class="panel movers-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Snapshot extremes</p>
+              <h2>Leaders / laggards</h2>
+            </div>
+            <span class="subtle">24h only</span>
+          </div>
+          <div class="movers-grid">
+            <div><h3>Leaders</h3><ol id="leaders" class="asset-list"></ol></div>
+            <div><h3>Laggards</h3><ol id="laggards" class="asset-list"></ol></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="category-section panel">
+        <div class="panel-head category-head">
+          <div>
+            <p class="panel-label">Category map</p>
+            <h2>Where the CMC category data stands out</h2>
+          </div>
+          <p class="method-note">Categories overlap. This table ranks individual CMC category metrics; it does not sum categories or infer capital flows.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Category</th><th>Tokens</th><th>Average change</th><th>Market-cap change</th><th>Volume change</th></tr>
+            </thead>
+            <tbody id="category-rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="lower-grid">
+        <article class="season-card">
+          <p class="panel-label">CMC Altcoin Season Index</p>
+          <div class="season-body"><strong id="altcoin-index">--</strong><span id="altcoin-label">Awaiting CMC data</span></div>
+          <div class="season-scale"><i></i><span>Bitcoin season</span><span>Altcoin season</span></div>
+          <p id="altcoin-range" class="method-note">CMC's index is shown as a separate source, not folded into the TrendLab posture.</p>
+        </article>
+        <article class="method-card">
+          <p class="panel-label">Methodology v1.0</p>
+          <h2>One visible rule set</h2>
+          <p id="methodology-summary">Top 100 non-stable CMC assets; breadth, median return, and market-cap-weighted return are calculated from the same snapshot.</p>
+          <button id="methodology-toggle" class="text-button" type="button" aria-expanded="false">Show classification thresholds</button>
+          <pre id="methodology-detail" hidden></pre>
+        </article>
+      </section>
+
+      <section class="evidence-section" aria-labelledby="evidence-title">
+        <div class="evidence-title">
+          <div>
+            <p class="eyebrow">Proof, not a black box</p>
+            <h2 id="evidence-title">CMC evidence trail</h2>
+          </div>
+          <p>Endpoints, request parameters, timestamps, HTTP status, cache state, and response excerpts used by this snapshot.</p>
+        </div>
+        <div id="evidence" class="evidence-list"></div>
+      </section>
+
+      <section id="error" class="error-card" hidden aria-live="assertive">
+        <strong>Snapshot unavailable</strong>
+        <p id="error-message">CMC data could not be loaded.</p>
+      </section>
+    </main>
+
+    <footer>
+      <span>TrendLab Market Structure Map</span>
+      <span>CoinMarketCap API data. Analytical market-structure snapshot, not financial advice.</span>
+    </footer>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
