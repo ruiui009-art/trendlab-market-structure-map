@@ -60,6 +60,10 @@ A category is marked `Confirmed` only when its CMC average price change, market-
 
 The UI can copy a timestamped research brief built from the displayed snapshot. It includes market posture, breadth, leadership divergence, confirmed/unconfirmed category observations, and an editorial limitation. It is a starting point for human research, not content ready for publication or an automated recommendation.
 
+### Snapshot monitor
+
+The interface compares the latest CMC snapshot with the previous snapshot viewed in the same browser. It shows changes in posture, breadth, market-cap-weighted return, and median return. The comparison is stored only in browser local storage; it does not create a server-side history or claim intra-period market data.
+
 ## What CMC made possible / limitations
 
 CMC makes it possible to compare a single timestamped market snapshot across ranked assets, global metrics, categories, and the Altcoin Season Index. Without a common source, the breadth calculation would mix incompatible universes and update times.

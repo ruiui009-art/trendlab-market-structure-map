@@ -5,6 +5,7 @@ const svgNs = "http://www.w3.org/2000/svg";
 let timer;
 let methodology = null;
 let currentBrief = "";
+const snapshotStorageKey = "trendlab-market-structure:last-snapshot";
 
 function formatPercent(value, digits = 1) {
   const number = Number(value);
@@ -178,6 +179,62 @@ function renderResearchBrief(snapshot) {
   $("brief-status").textContent = "";
 }
 
+function formatPointDelta(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "--";
+  return `${number > 0 ? "+" : ""}${number.toFixed(1)}pp`;
+}
+
+function snapshotForComparison(snapshot) {
+  const { breadth, market } = snapshot;
+  return {
+    timestamp: market.last_updated,
+    posture: breadth.posture.label,
+    breadth: Number(breadth.percent_positive),
+    weightedReturn: Number(breadth.weighted_return),
+    medianReturn: Number(breadth.median_return),
+  };
+}
+
+function readPreviousSnapshot() {
+  try {
+    const value = localStorage.getItem(snapshotStorageKey);
+    return value ? JSON.parse(value) : null;
+  } catch {
+    return null;
+  }
+}
+
+function renderSnapshotChange(snapshot) {
+  const current = snapshotForComparison(snapshot);
+  const previous = readPreviousSnapshot();
+  const summary = $("snapshot-change-summary");
+  const detail = $("snapshot-change-detail");
+
+  if (!previous) {
+    summary.textContent = "This is the first snapshot in this browser. Refresh after CMC data updates to compare market structure.";
+    detail.textContent = "Comparison is stored only in this browser.";
+  } else if (previous.timestamp === current.timestamp) {
+    summary.textContent = "No newer CMC snapshot is available yet.";
+    detail.textContent = `Current source timestamp: ${formatTime(current.timestamp)}.`;
+  } else {
+    const breadthDelta = current.breadth - previous.breadth;
+    const weightedDelta = current.weightedReturn - previous.weightedReturn;
+    const medianDelta = current.medianReturn - previous.medianReturn;
+    const postureChange = current.posture === previous.posture
+      ? `Posture remains ${current.posture}.`
+      : `Posture changed from ${previous.posture} to ${current.posture}.`;
+    summary.textContent = postureChange;
+    detail.textContent = `Breadth ${formatUnsignedPercent(previous.breadth)} to ${formatUnsignedPercent(current.breadth)} (${formatPointDelta(breadthDelta)}); weighted return ${formatPercent(previous.weightedReturn)} to ${formatPercent(current.weightedReturn)} (${formatPointDelta(weightedDelta)}); median return ${formatPercent(previous.medianReturn)} to ${formatPercent(current.medianReturn)} (${formatPointDelta(medianDelta)}).`;
+  }
+
+  try {
+    localStorage.setItem(snapshotStorageKey, JSON.stringify(current));
+  } catch {
+    detail.textContent = `${detail.textContent} Browser storage is unavailable, so this comparison will not persist.`;
+  }
+}
+
 async function copyResearchBrief() {
   const button = $("copy-brief");
   const status = $("brief-status");
@@ -322,6 +379,7 @@ function renderSnapshot(snapshot) {
   renderCategories(snapshot.categories);
   renderCategoryObservation(snapshot.category_observation);
   renderResearchBrief(snapshot);
+  renderSnapshotChange(snapshot);
   renderEvidence(snapshot.sources);
   renderMethodology(snapshot.methodology);
 

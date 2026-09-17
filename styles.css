@@ -94,6 +94,13 @@ h1 em { color: var(--acid); font-family: Georgia, serif; font-size: 1.11em; font
 .metric-strip span { display: block; margin-bottom: 8px; color: var(--muted); font: 700 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .11em; text-transform: uppercase; }
 .metric-strip strong { font-size: clamp(19px, 2vw, 26px); letter-spacing: -.05em; }
 
+.snapshot-change { display: grid; grid-template-columns: minmax(230px, .9fr) 1.3fr; gap: 28px; margin-bottom: 14px; padding: 24px 27px; align-items: center; background: linear-gradient(115deg, rgb(197 244 110 / 8%), var(--surface)); }
+.snapshot-change .panel-label { margin-bottom: 7px; }
+.snapshot-change h2 { margin: 0; font-size: 18px; letter-spacing: -.04em; }
+.snapshot-change-summary, .snapshot-change-detail { margin: 0; }
+.snapshot-change-summary { color: var(--soft); font-size: 14px; }
+.snapshot-change-detail { grid-column: 2; color: var(--muted); font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; }
+
 .analysis-grid { display: grid; grid-template-columns: 1.35fr .9fr; gap: 14px; }
 .panel { border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(160deg, rgb(21 26 34 / 96%), rgb(13 16 22 / 96%)); }
 .panel-head { display: flex; gap: 18px; padding: 25px 27px 0; align-items: start; justify-content: space-between; }
@@ -227,6 +234,8 @@ footer span:first-child { color: var(--soft); font-weight: 700; }
   .metric-strip article:nth-child(2) { border-right: 0; }
   .metric-strip article:nth-child(n + 3) { border-top: 1px solid var(--line); }
   .analysis-grid, .lower-grid { grid-template-columns: 1fr; }
+  .snapshot-change { grid-template-columns: 1fr; gap: 12px; }
+  .snapshot-change-detail { grid-column: auto; }
   .movers-grid { grid-template-columns: 1fr; }
   .movers-grid > div + div { padding-top: 22px; padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
   .category-head { display: block; }
@@ -241,6 +250,7 @@ footer span:first-child { color: var(--soft); font-weight: 700; }
   .brand small { display: none; }
   .posture-copy h2 { font-size: 34px; }
   .metric-strip article { padding: 17px; }
+  .snapshot-change { padding: 22px 20px; }
   .panel-head, .category-head { padding: 22px 20px 0; }
   #breadth-plot { width: calc(100% - 40px); margin: 0 20px; }
   .plot-key, .axis { padding-right: 20px; padding-left: 20px; }

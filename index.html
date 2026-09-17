@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="An evidence-first CMC market-breadth map for crypto researchers.">
     <title>TrendLab Market Structure Map</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body data-tone="neutral">
@@ -65,6 +66,15 @@
           <span>24h adjusted volume</span>
           <strong id="total-volume">--</strong>
         </article>
+      </section>
+
+      <section class="snapshot-change panel" aria-live="polite" aria-labelledby="snapshot-change-title">
+        <div>
+          <p class="panel-label">Snapshot monitor</p>
+          <h2 id="snapshot-change-title">What changed since your last snapshot</h2>
+        </div>
+        <p id="snapshot-change-summary" class="snapshot-change-summary">Waiting for a CMC snapshot.</p>
+        <p id="snapshot-change-detail" class="snapshot-change-detail"></p>
       </section>
 
       <section class="analysis-grid">
